@@ -13,11 +13,12 @@ def isfloat(num):
         return False
 
 def handler(event, context):
-    print("Starting the extraction")
-    # League leaders
+    getLeagueLeaders()
+
+def getCSV(sheet_name):
     google_sheet = {
-        "id": os.environ.get('SHEET_ID'),
-        "sheet": os.environ.get('SHEET_NAME')
+        "id": os.environ.get('BS_SHEET_ID'),
+        "sheet": sheet_name 
     }
 
     # Get the sheet as csv
@@ -25,7 +26,14 @@ def handler(event, context):
     res = requests.get(google_sheet_url)
 
     csvStringIO = StringIO(res.text)
-    rows = csv.reader(csvStringIO, delimiter=',')
+
+    return csvStringIO
+
+def getLeagueLeaders():
+
+    csv_string = getCSV(os.environ.get('BS_LEAGUE_LEADERS_SHEET'))
+
+    rows = csv.reader(csv_string, delimiter=',')
     rowsList = list(rows)
 
     # get the index of the first empty name column
@@ -52,14 +60,23 @@ def handler(event, context):
         'data' : data
     }
 
-    s3Upload(json.dumps(jsonResponse))
+    s3Upload(json.dumps(jsonResponse), '/json','leaders.json')
 
-def s3Upload(body):
+def s3Upload(body, file_path, file_name):
 
     encoded_string = body.encode("utf-8")
     bucket_name = os.environ.get('BSL_BUCKET_NAME')
-    file_name = os.environ.get('BSL_FILE_NAME')
-    s3_path = os.environ.get('BSL_PATH') + file_name
+    s3_path = file_path + "/" + file_name
+
+    #local development
+    if(os.environ.get('LOCAL_PATH')):
+        abs_path = os.path.abspath(os.environ.get('LOCAL_PATH') + file_path)
+        file = abs_path + "/" + file_name
+        
+        os.makedirs(abs_path, exist_ok=True)
+        with open(file, "w") as f:
+            f.write(body)
+        return
 
     print("ADDING TO")
     print("BUCKET: " + bucket_name)

@@ -3,11 +3,9 @@ This is an aws cdk stack for extracting the baller stats data from a publicly ac
 
 | name      | value |
 | ----------- | ----------- |
-| SHEET_ID | The id of the public google sheet |
-| SHEET_NAME | The name of the google sheet |
-| BSL_PATH | the s3 path to save files |
-| BSL_FILE_NAME | the filename to be uploaded |
 | BS_SITE   | The url that will be allowed to retrieve the data. Used for CORS.  |
+| BS_SHEET_ID   | The id of the public google sheet |
+| BS_LEAGUE_LEADERS_SHEET   | The name of the google sheet where the league leaders (totals) is places  |
 
 ## Useful commands
 * `npm run build`   compile typescript to js
