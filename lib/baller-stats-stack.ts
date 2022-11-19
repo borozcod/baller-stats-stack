@@ -74,11 +74,9 @@ export class BallerStatsStack extends cdk.Stack {
         },
       }),
       environment: {
-        SHEET_ID: process.env.SHEET_ID || '',
-        SHEET_NAME: process.env.SHEET_NAME || '',
         BSL_BUCKET_NAME: process.env.BSL_BUCKET_NAME || '',
-        BSL_PATH: process.env.BSL_PATH || '',
-        BSL_FILE_NAME: process.env.BSL_FILE_NAME || ''
+        BS_LEAGUE_LEADERS_SHEET: process.env.BS_LEAGUE_LEADERS_SHEET || '',
+        BS_SHEET_ID: process.env.BS_SHEET_ID || '',
       },
       runtime: lambda.Runtime.PYTHON_3_9,
       handler: 'app.handler',
